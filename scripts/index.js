@@ -73,13 +73,10 @@ const mouseAnimated = () => {
     }px, ${md.clientY + scrollY}px) scale(${skewX},${skewY})`;
   });
 };
-
-let imageTimer;
 const imageSection = document.querySelectorAll(".landing-sectionTwo > div");
 imageSection.forEach((div, idx) => {
   let prevX = 0;
   div.addEventListener("mousemove", (md) => {
-    clearInterval(imageTimer);
     divTop = div.getBoundingClientRect().top;
     divText = div.querySelector("h1");
     image = div.querySelector("img");
@@ -90,9 +87,13 @@ imageSection.forEach((div, idx) => {
     prevX = md.clientY;
 
     diffFromTop = divTop - md.ClientY;
-    console.log(prevX);
+
+    gsap.to(divText, {
+      x: 200,
+      opacity: 0.9,
+      ease: Power1,
+    });
     gsap.to(image, {
-      duration: 1,
       opacity: 1,
       top: diffFromTop,
       left: gsap.utils.clamp(
@@ -104,17 +105,16 @@ imageSection.forEach((div, idx) => {
       rotate: gsap.utils.clamp(-20, 20, mouse_delta.x),
     });
 
-    imageTimer = setTimeout(() => {
-      gsap.to(image, {
-        ease: Power3,
-        rotate: 1,
-      });
-    }, 1000);
-
     div.addEventListener("mouseleave", (md) => {
       gsap.from(image, {
         opacity: 0,
         rotate: 1,
+      });
+
+      gsap.from(divText, {
+        ease: Power1,
+        x: 0,
+        opacity: 0.7,
       });
     });
   });
